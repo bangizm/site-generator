@@ -135,3 +135,17 @@ def split_nodes_link(old_nodes):
             i += 1
     return new_nodes
 
+def text_to_textnodes(text):
+    # Start with the whole string as a single TEXT node
+    nodes = [TextNode(text, TextType.TEXT)]
+
+    # Split out images first (so they don't get treated as links)
+    nodes = split_nodes_image(nodes)
+    # Then split out links
+    nodes = split_nodes_link(nodes)
+    # Then handle bold, italic and code delimiters
+    nodes = split_nodes_delimiter(nodes, "**", TextType.BOLD)
+    nodes = split_nodes_delimiter(nodes, "_", TextType.ITALIC)
+    nodes = split_nodes_delimiter(nodes, "`", TextType.CODE)
+
+    return nodes

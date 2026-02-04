@@ -1,5 +1,13 @@
 import unittest
-from textnode import TextNode, TextType, split_nodes_delimiter, split_nodes_image, split_nodes_link
+from textnode import (
+    TextNode,
+    TextType,
+    split_nodes_delimiter,
+    split_nodes_image,
+    split_nodes_link,
+    extract_markdown_images,
+    extract_markdown_links,
+)
 
 class TestTextNode(unittest.TestCase):
     def test_eq(self):
@@ -158,6 +166,56 @@ class TestSplitNodesLink(unittest.TestCase):
         result = split_nodes_link(nodes)
         expected = [TextNode("This text has no links.", TextType.TEXT)]
         self.assertEqual(result, expected)
+
+class TestTextToTextNodes(unittest.TestCase):
+    def test_text_to_text_nodes_dynamic(self):
+        text = "This is **bold** text and this is _italic_ text. Here is a [link](http://example.com) and an image ![alt](http://example.com/img.png)."
+        nodes = [TextNode(text, TextType.TEXT)]
+        
+        # First split by images
+        nodes = split_nodes_image(nodes)
+        # Then split by links
+        nodes = split_nodes_link(nodes)
+        # Then split by bold
+        nodes = split_nodes_delimiter(nodes, "**", TextType.BOLD)
+        # Then split by italic
+        nodes = split_nodes_delimiter(nodes, "_", TextType.ITALIC)
+
+        expected = [
+            TextNode("This is ", TextType.TEXT),
+            TextNode("bold", TextType.BOLD),
+            TextNode(" text and this is ", TextType.TEXT),
+            TextNode("italic", TextType.ITALIC),
+            TextNode(" text. Here is a ", TextType.TEXT),
+            TextNode("link", TextType.LINK, "http://example.com"),
+            TextNode(" and an image ", TextType.TEXT),
+            TextNode("alt", TextType.IMAGE, "http://example.com/img.png"),
+            TextNode(".", TextType.TEXT)
+        ]
+        self.assertEqual(nodes, expected)
+
+        text2 = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
+        expected2 = [
+            TextNode("This is ", TextType.TEXT),
+            TextNode("text", TextType.BOLD),
+            TextNode(" with an ", TextType.TEXT),
+            TextNode("italic", TextType.ITALIC),
+            TextNode(" word and a ", TextType.TEXT),
+            TextNode("code block", TextType.CODE),
+            TextNode(" and an ", TextType.TEXT),
+            TextNode("obi wan image", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
+            TextNode(" and a ", TextType.TEXT),
+            TextNode("link", TextType.LINK, "https://boot.dev"),
+        ]
+        nodes2 = [TextNode(text2, TextType.TEXT)]
+        nodes2 = split_nodes_image(nodes2)
+        nodes2 = split_nodes_link(nodes2)
+        nodes2 = split_nodes_delimiter(nodes2, "**", TextType.BOLD)
+        nodes2 = split_nodes_delimiter(nodes2, "_", TextType.ITALIC)
+        nodes2 = split_nodes_delimiter(nodes2, "`", TextType.CODE)
+        self.assertEqual(nodes2, expected2)
+        
+    
     
 if __name__ == "__main__":
     unittest.main()
