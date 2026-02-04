@@ -1,5 +1,6 @@
 import unittest
 from htmlnode import HTMLNode, LeafNode, ParentNode
+from textnode import TextNode, TextType, text_node_to_html_node
 
 class TestHTMLNode(unittest.TestCase):
     def test_eq(self):
@@ -74,3 +75,28 @@ class TestParentNode(unittest.TestCase):
 
 
         # test value==None and children is != None
+
+class TestTextNodeToHTMLNode(unittest.TestCase):
+    def test_text_node_to_html_node_plaintext(self):
+        text_node = TextNode("Hello, world!", TextType.TEXT)
+        html_node = text_node_to_html_node(text_node)
+        expected_node = LeafNode(None, "Hello, world!")
+        self.assertEqual(html_node, expected_node)
+
+    def test_text_node_to_html_node_bold(self):
+        text_node = TextNode("Bold Text", TextType.BOLD)
+        html_node = text_node_to_html_node(text_node)
+        expected_node = LeafNode("b", "Bold Text")
+        self.assertEqual(html_node, expected_node)
+
+    def test_text_node_to_html_node_link(self):
+        text_node = TextNode("Google", TextType.LINK, "https://www.google.com")
+        html_node = text_node_to_html_node(text_node)
+        expected_node = LeafNode("a", "Google", {"href": "https://www.google.com"})
+        self.assertEqual(html_node, expected_node)
+        
+    def test_text(self):
+        node = TextNode("This is a text node", TextType.TEXT)
+        html_node = text_node_to_html_node(node)
+        self.assertEqual(html_node.tag, None)
+        self.assertEqual(html_node.value, "This is a text node")

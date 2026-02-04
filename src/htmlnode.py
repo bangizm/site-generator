@@ -12,7 +12,15 @@ class HTMLNode():
 
     def __repr__(self):
         return f'HTMLNode(tag={self.tag}, value={self.value}, children={self.children}, props={self.props})'
-
+    
+    def __eq__(self, value):
+        return (
+            self.tag == value.tag and \
+            self.value == value.value and \
+            self.children == value.children and \
+            self.props == value.props
+        )
+    
     def to_html(self):
         raise NotImplementedError()
 

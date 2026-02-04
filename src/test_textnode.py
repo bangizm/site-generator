@@ -3,8 +3,8 @@ from textnode import TextNode, TextType
 
 class TestTextNode(unittest.TestCase):
     def test_eq(self):
-        node = TextNode("This is a text node", TextType.PLAIN)
-        node2 = TextNode("This is a text node", TextType.PLAIN)
+        node = TextNode("This is a text node", TextType.TEXT)
+        node2 = TextNode("This is a text node", TextType.TEXT)
         self.assertEqual(node, node2)
 
         node = TextNode("This is a text node", TextType.BOLD)
@@ -28,17 +28,17 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(node, node2)
 
     def test_noteq(self):
-        #TextType", ["PLAIN", "BOLD", "ITALIC", "CODE", "LINK", "IMAGE"]
+        #TextType", ["TEXT", "BOLD", "ITALIC", "CODE", "LINK", "IMAGE"]
         node = TextNode("This is a text node", TextType.LINK)
         node2 = TextNode("This is a text node", TextType.LINK, "localhost:8080")
         self.assertNotEqual(node, node2)
     
-        node = TextNode("This is a text node", TextType.PLAIN)
+        node = TextNode("This is a text node", TextType.TEXT)
         node2 = TextNode("This is a text node", TextType.ITALIC)
         self.assertNotEqual(node, node2)
     
-        node = TextNode("This is a text node", TextType.PLAIN)
-        node2 = TextNode("This is a different text node", TextType.PLAIN)
+        node = TextNode("This is a text node", TextType.TEXT)
+        node2 = TextNode("This is a different text node", TextType.TEXT)
         self.assertNotEqual(node, node2)
     
         node = TextNode("This is a text node", TextType.LINK)
