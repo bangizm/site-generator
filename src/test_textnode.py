@@ -66,6 +66,52 @@ class TestSplitNodesDelimiter(unittest.TestCase):
         nodes = [TextNode("This is **bold text", TextType.TEXT)]
         with self.assertRaises(ValueError):
             split_nodes_delimiter(nodes, "**", TextType.BOLD)
+
+class TextExtractMarkdownImages(unittest.TestCase):
+    def test_extract_markdown_images_basic(self):
+        from textnode import extract_markdown_images
+        text = "Here is an image: ![alt text](http://example.com/image.png)"
+        result = extract_markdown_images(text)
+        expected = [("alt text", "http://example.com/image.png")]
+        self.assertEqual(result, expected)
+
+    def test_extract_markdown_images_multiple(self):
+        from textnode import extract_markdown_images
+        text = "Image one: ![img1](http://example.com/img1.png) and Image two: ![img2](http://example.com/img2.png)"
+        result = extract_markdown_images(text)
+        expected = [("img1", "http://example.com/img1.png"), ("img2", "http://example.com/img2.png")]
+        self.assertEqual(result, expected)
+
+    def test_extract_markdown_images_none(self):
+        from textnode import extract_markdown_images
+        text = "This text has no images."
+        result = extract_markdown_images(text)
+        expected = []
+        self.assertEqual(result, expected)
+
+class TextExtractMarkdownLinks(unittest.TestCase):
+    def test_extract_markdown_links_basic(self):
+        from textnode import extract_markdown_links
+        text = "Here is a link: [Google](http://google.com)"
+        result = extract_markdown_links(text)
+        expected = [("Google", "http://google.com")]
+        self.assertEqual(result, expected)
+
+    def test_extract_markdown_links_multiple(self):
+        from textnode import extract_markdown_links
+        text = "Link one: [Example1](http://example1.com) and Link two: [Example2](http://example2.com)"
+        result = extract_markdown_links(text)
+        expected = [("Example1", "http://example1.com"), ("Example2", "http://example2.com")]
+        self.assertEqual(result, expected)
+
+    def test_extract_markdown_links_none(self):
+        from textnode import extract_markdown_links
+        text = "This text has no links."
+        result = extract_markdown_links(text)
+        expected = []
+        self.assertEqual(result, expected)
+
+
     
 if __name__ == "__main__":
     unittest.main()

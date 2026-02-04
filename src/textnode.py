@@ -1,4 +1,6 @@
 from enum import Enum
+import re
+
 #TextType = Enum("TextType", ["TEXT", "BOLD", "ITALIC", "CODE", "LINK", "IMAGE"])
 class TextType(Enum):
     TEXT = "TEXT"
@@ -66,3 +68,23 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
                 new_nodes.append(TextNode(part, text_type))
     # ToDo: Handle nested delimiters
     return new_nodes
+
+def extract_markdown_images(text):
+    # Extract markdown image text and returns a list of tuples (alt_text, url)
+    pattern = r'!\[([^\]]*)\]\(([^)]+)\)'
+    matches = re.findall(pattern, text)
+    image_texts = []
+    for alt_text, url in matches:
+        image_texts.append((alt_text, url))
+
+    return image_texts
+
+def extract_markdown_links(text):
+    # Extract markdown link text and returns a list of tuples (link_text, url)
+    pattern = r'\[([^\]]+)\]\(([^)]+)\)'
+    matches = re.findall(pattern, text)
+    link_texts = []
+    for link_text, url in matches:
+        link_texts.append((link_text, url))
+
+    return link_texts
