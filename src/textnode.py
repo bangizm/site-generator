@@ -88,3 +88,50 @@ def extract_markdown_links(text):
         link_texts.append((link_text, url))
 
     return link_texts
+
+def split_nodes_image(old_nodes):
+    new_nodes = []
+    for node in old_nodes:
+        if node.text_type != TextType.TEXT:
+            new_nodes.append(node)
+            continue
+        pattern = r'!\[([^\]]*)\]\(([^)]+)\)'
+        parts = re.split(pattern, node.text)
+        i = 0
+        while i < len(parts):
+            if i % 3 == 0:
+                # Normal text
+                if parts[i]:
+                    new_nodes.append(TextNode(parts[i], TextType.TEXT))
+            else:
+                # Image alt text and URL
+                alt_text = parts[i]
+                url = parts[i + 1]
+                new_nodes.append(TextNode(alt_text, TextType.IMAGE, url))
+                i += 1  # Skip the URL part
+            i += 1
+    return new_nodes
+
+def split_nodes_link(old_nodes):
+    new_nodes = []
+    for node in old_nodes:
+        if node.text_type != TextType.TEXT:
+            new_nodes.append(node)
+            continue
+        pattern = r'\[([^\]]+)\]\(([^)]+)\)'
+        parts = re.split(pattern, node.text)
+        i = 0
+        while i < len(parts):
+            if i % 3 == 0:
+                # Normal text
+                if parts[i]:
+                    new_nodes.append(TextNode(parts[i], TextType.TEXT))
+            else:
+                # Link text and URL
+                link_text = parts[i]
+                url = parts[i + 1]
+                new_nodes.append(TextNode(link_text, TextType.LINK, url))
+                i += 1  # Skip the URL part
+            i += 1
+    return new_nodes
+
