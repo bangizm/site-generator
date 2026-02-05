@@ -3,6 +3,10 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+# site-generator related resources, inlcuding the generated site
+public/
+sandbox/
+
 # tmp vim python files
 *.py.swp
 
