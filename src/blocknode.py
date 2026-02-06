@@ -23,7 +23,6 @@ def block_to_block_type(markdown):
     if re.match(r'^#{1,6}\s', markdown): 
         return BlockType.HEADING
     elif re.match(r'^```\s*\n', markdown) and markdown.endswith("```"):
-        print(f'__DEBUG__ Detected CODE block: {markdown[:30]=}...')
         return BlockType.CODE
     elif markdown.startswith(">"):  # check each line? ####
         return BlockType.QUOTE
@@ -69,12 +68,9 @@ def markdown_to_html_node(markdown):
             children.append(ParentNode("blockquote", html_nodes))
             
         elif block_type == BlockType.UNORDERED_LIST:
-            print(f'__DEBUG__ Detected UNORDERED_LIST block: {block[:80]=}...')
             items = [line.lstrip('- ').strip() for line in block.split('\n') if line.strip()]
-            print(f'__DEBUG__ STRIPPED Unordered list items: {items=}')
             list_items = []
             for item in items:
-                print(f'__DEBUG__ Unordered list item: {block_type=} <> {item=}')
                 text_nodes = text_to_textnodes(item)
                 html_nodes = [text_node_to_html_node(node) for node in text_nodes]
                 list_items.append(ParentNode("li", html_nodes))
