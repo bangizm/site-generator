@@ -1,1 +1,2 @@
 python3 src/main.py "/bangizm/site-generator/"
+

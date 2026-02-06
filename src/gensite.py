@@ -53,6 +53,9 @@ def generate_page(from_path, template_path, dest_path, basepath="/"):
     
     site_html = template_text.replace('{{ Title }}', title_text).replace('{{ Content }}', content_html)
     site_html = site_html.replace('href="/', f'href="{basepath}').replace('src="/', f'src="{basepath}')
+    site_html = site_html.replace("href='/", f"href='{basepath}").replace("src='/", f"src='{basepath}")
+
+    print(f'__DEBUG__ {site_html=}')
 
     # write the resulting HTML to dest_path
     #----- print(f'Writing generated HTML to {dest_path}...{site_html=}')

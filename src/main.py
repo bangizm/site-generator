@@ -10,13 +10,10 @@ from gensite import generate_page, generate_pages_recursive, copy_static_to_publ
 def main():
     copy_static_to_public()
 
-    #TODO: FIX basepath..... FINISH This...
-    #basepath = sys.argv[0] if len(sys.argv) > 0 else "/"
-    basepath = "/"
-
+    basepath = sys.argv[1] if len(sys.argv) > 1 else "/"
     print(f" ... Generating sites using {basepath=}...")
-    #generate_page('./content/index.md', './template.html', './public/index.html')
     generate_pages_recursive('./content', './template.html', './public', basepath=basepath)
+    #generate_page('./content/index.md', './template.html', './public/index.html')
 
 
 if __name__ == "__main__":
