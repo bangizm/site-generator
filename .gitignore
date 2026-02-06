@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 
 # site-generator related resources, inlcuding the generated site
-public/
+#public/
 sandbox/
 
 # Other Random files to ignore manually added
