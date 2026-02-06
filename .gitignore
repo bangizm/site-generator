@@ -7,8 +7,10 @@ __pycache__/
 public/
 sandbox/
 
-# tmp vim python files
+# Other Random files to ignore manually added
 *.py.swp
+.DS_Store
+src/mytest.py
 
 # C extensions
 *.so
